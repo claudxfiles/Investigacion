@@ -8,7 +8,6 @@ import { DocumentUpload } from './DocumentUpload';
 import { DocumentList } from './DocumentList';
 import { ReportGenerator } from './ReportGenerator';
 import { ReportViewer } from './ReportViewer';
-import { AnalystTools } from './AnalystTools';
 
 interface ProjectDashboardProps {
   project: Project;
@@ -195,9 +194,6 @@ export function ProjectDashboard({ project, onBack }: ProjectDashboardProps) {
                     Subir Documentos
                   </button>
                 </div>
-              </div>
-              <div className="mb-6">
-                <AnalystTools project={project} documents={documents} onUpdate={loadDocuments} />
               </div>
               <DocumentList documents={documents} onUpdate={loadDocuments} />
             </div>
