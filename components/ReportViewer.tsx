@@ -145,7 +145,7 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
               <h3 className="text-xl font-bold text-white">Resumen Ejecutivo</h3>
             </div>
             <div className="bg-slate-900 rounded-lg p-6 border border-slate-700">
-              <p className="text-slate-300 leading-relaxed">{report.executive_summary}</p>
+              <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">{report.executive_summary}</p>
             </div>
           </section>
 
@@ -160,10 +160,7 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
                   <h4 className="text-lg font-semibold text-white mb-3">
                     {idx + 1}. {section.title}
                   </h4>
-                  <p className="text-slate-300 mb-4 leading-relaxed">{section.content}</p>
-                  <div className="text-sm text-slate-400 bg-slate-800 rounded px-3 py-2">
-                    <span className="font-medium">Referencias de Fuente:</span> {section.document_references.length} documento(s)
-                  </div>
+                  <p className="text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">{section.content}</p>
                 </div>
               ))}
             </div>
@@ -185,10 +182,7 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
                       {getSeverityLabel(finding.severity)}
                     </span>
                   </div>
-                  <p className="text-slate-300 mb-4 leading-relaxed">{finding.description}</p>
-                  <div className="text-sm text-slate-400 bg-slate-800 rounded px-3 py-2">
-                    <span className="font-medium">Referenciado en:</span> {finding.document_references.length} documento(s)
-                  </div>
+                  <p className="text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">{finding.description}</p>
                 </div>
               ))}
             </div>
@@ -200,7 +194,7 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
               <h3 className="text-xl font-bold text-white">Conclusiones</h3>
             </div>
             <div className="bg-slate-900 rounded-lg p-6 border border-slate-700">
-              <p className="text-slate-300 leading-relaxed">{report.conclusions}</p>
+              <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">{report.conclusions}</p>
             </div>
           </section>
 
@@ -220,7 +214,7 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
                       Prioridad {getPriorityLabel(rec.priority)}
                     </span>
                   </div>
-                  <p className="text-slate-300 mb-4 leading-relaxed">{rec.description}</p>
+                  <p className="text-slate-300 mb-4 leading-relaxed whitespace-pre-wrap">{rec.description}</p>
                   <div className="bg-slate-800 rounded p-4">
                     <p className="text-sm font-medium text-slate-300 mb-2">Pasos Accionables:</p>
                     <ol className="space-y-2">
