@@ -1,18 +1,23 @@
 'use client';
 
 import { useState } from 'react';
-import { X, Download, FileText, AlertTriangle, CheckCircle2, TrendingUp, FileDown } from 'lucide-react';
+import { X, Download, FileText, AlertTriangle, CheckCircle2, TrendingUp, FileDown, Edit2 } from 'lucide-react';
 import { Report } from '@/types';
 import { PDFExportService } from '@/lib/pdf-export';
+import { ReportPreviewEditor } from './ReportPreviewEditor';
+import { supabase } from '@/lib/supabase';
 
 interface ReportViewerProps {
   report: Report;
   projectName?: string;
   onClose: () => void;
+  onUpdate?: () => void;
 }
 
-export function ReportViewer({ report, projectName, onClose }: ReportViewerProps) {
+export function ReportViewer({ report, projectName, onClose, onUpdate }: ReportViewerProps) {
   const [showFiscaliaForm, setShowFiscaliaForm] = useState(false);
+  const [showEditor, setShowEditor] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [fiscaliaInfo, setFiscaliaInfo] = useState({
     fiscal: '',
     caso: '',
@@ -96,6 +101,51 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
     setShowFiscaliaForm(false);
   };
 
+  const handleSaveEdits = async (editedData: any) => {
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from('reports')
+        .update({
+          executive_summary: editedData.executive_summary,
+          document_analysis: editedData.document_analysis,
+          key_findings: editedData.key_findings,
+          conclusions: editedData.conclusions,
+          recommendations: editedData.recommendations,
+        })
+        .eq('id', report.id);
+
+      if (error) throw error;
+
+      setShowEditor(false);
+      if (onUpdate) onUpdate();
+      onClose();
+    } catch (err: any) {
+      alert(err.message || 'Error al guardar cambios');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // Si se está editando, mostrar el editor
+  if (showEditor) {
+    return (
+      <ReportPreviewEditor
+        reportData={{
+          executive_summary: report.executive_summary,
+          document_analysis: report.document_analysis,
+          key_findings: report.key_findings,
+          conclusions: report.conclusions,
+          recommendations: report.recommendations,
+        }}
+        reportTitle={report.title}
+        reportType={report.report_type}
+        onClose={() => setShowEditor(false)}
+        onSave={handleSaveEdits}
+      />
+    );
+  }
+
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-slate-800 rounded-xl max-w-5xl w-full max-h-[90vh] overflow-hidden border border-slate-700 flex flex-col">
@@ -115,6 +165,13 @@ export function ReportViewer({ report, projectName, onClose }: ReportViewerProps
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowEditor(true)}
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+              <Edit2 className="w-4 h-4" />
+              Editar
+            </button>
             <button
               onClick={handleExportPDF}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
